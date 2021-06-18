@@ -1,60 +1,38 @@
 <template>
   <div class="container mt-5 text-center">
-    <h1>Testing API: Movies</h1>
-
-    <v-data-table
-      :items="movies"
-      :headers="movieHeaders"
-      :items-per-page="5"
-      class="elevation-1"
-    ></v-data-table>
-
+    <h1>Home</h1>
+    <v-tabs align-with-title>
+      <v-tab>
+        <router-link
+          tag="button"
+          to="/movies"
+        >MOVIES</router-link>
+      </v-tab>
+      <v-tab>
+        <router-link
+          tag="button"
+          to="/movies"
+        >CHARACTERS</router-link>
+      </v-tab>
+      <v-tab>
+        <router-link
+          tag="button"
+          to="/movies"
+        >QUOTES</router-link>
+      </v-tab>
+    </v-tabs>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
 
 export default {
 
   name: 'Home',
-  data() {
-    return {
-      movies: [],
-      movieHeaders: [],
-      apiURL: process.env.VUE_APP_API_URL,
-      apiToken: process.env.VUE_APP_API_TOKEN
-    }
-  },
-  created() {
-    this.loadItems()
-  },
-  methods: {
-    loadItems() {
-      const url = `${this.apiURL}/movie`
-      console.log(url);
-      axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${this.apiToken}`
-        }
-      }).
-        then(res => {
-          const items = res.data
-          this.movies = items.docs
-          if (this.movieHeaders.length === 0) {
-            this.loadMovieHeaders()
-          }
-        })
-    },
-    loadMovieHeaders() {
-      const movie = this.movies[0]
-      for (let key of Object.keys(movie)) {
-        this.movieHeaders.push({
-          text: key,
-          value: key
-        })
-      }
-    }
-  }
+
+
 }
 </script>
+
+
