@@ -1,5 +1,7 @@
 <template>
-  <hello-world />
+  <div class="container mt-5">
+    <h1>Testing API</h1>
+  </div>
 </template>
 
 <script>
