@@ -1,14 +1,30 @@
 <template>
   <div class="container text-center">
-    <h2 class="mb-5">MovieTable Component</h2>
+    <v-card
+      v-if="!loading"
+      class="elevation-8 mt-5"
+    >
+      <v-card-title>MOVIES</v-card-title>
+      <v-data-table
+        :items="movies"
+        :headers="movieHeaders"
+        :items-per-page="5"
+      ></v-data-table>
+    </v-card>
 
-    <v-data-table
-      :items="movies"
-      :headers="movieHeaders"
-      :items-per-page="5"
-      class="elevation-8"
-    ></v-data-table>
-
+    <div v-if="loading">
+      <v-sheet class="pa-3 mt-5 elevation-8">
+        <v-skeleton-loader
+          class="mx-auto"
+          type="table"
+        ></v-skeleton-loader>
+      </v-sheet>
+      <v-progress-linear
+        indeterminate
+        color="cyan"
+        class="mt-5"
+      ></v-progress-linear>
+    </div>
   </div>
 </template>
 
@@ -18,6 +34,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      loading: false,
       movies: [],
       movieHeaders: [],
       apiURL: process.env.VUE_APP_API_URL,
@@ -29,6 +46,7 @@ export default {
   },
   methods: {
     loadItems() {
+      this.loading = true
       const url = `${this.apiURL}/movie`
       console.log(url);
       axios.get(url, {
@@ -42,6 +60,7 @@ export default {
           if (this.movieHeaders.length === 0) {
             this.loadMovieHeaders()
           }
+          this.loading = false
         })
     },
     loadMovieHeaders() {
