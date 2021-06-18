@@ -1,19 +1,19 @@
 <template>
   <div class="container text-center">
-    <h2 class="mb-5">QuoteTable Component</h2>
-    <v-data-table
+    <v-card
       v-if="!loading"
-      :items="quotes"
-      :headers="quoteHeaders"
-      :items-per-page="5"
-      class="elevation-8"
-    ></v-data-table>
+      class="elevation-8 mt-5"
+    >
+      <v-card-title>QUOTES</v-card-title>
+      <v-data-table
+        :items="quotes"
+        :headers="quoteHeaders"
+        :items-per-page="5"
+      ></v-data-table>
+    </v-card>
 
     <div v-if="loading">
-      <v-sheet
-        :color="grey"
-        class="pa-3 mt-5 elevation-8"
-      >
+      <v-sheet class="pa-3 mt-5 elevation-8">
         <v-skeleton-loader
           class="mx-auto"
           type="table"
