@@ -47,6 +47,7 @@ export default {
     loadMovieHeaders() {
       const movie = this.movies[0]
       for (let key of Object.keys(movie)) {
+        if (key === '_id') continue
         this.movieHeaders.push({
           text: key,
           value: key
