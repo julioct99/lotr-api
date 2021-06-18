@@ -1,6 +1,6 @@
 <template>
-  <div class="container mt-5 text-center">
-    <h2 class="mb-5">Movies</h2>
+  <div class="container text-center">
+    <h2 class="mb-5">MovieTable Component</h2>
 
     <v-data-table
       :items="movies"
