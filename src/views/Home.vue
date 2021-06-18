@@ -1,14 +1,14 @@
 <template>
   <div class="container mt-5 text-center">
     <h1>Testing API: Movies</h1>
-    <p
-      :key="movie._id"
-      v-for="movie in movies"
-    >
-      {{
-        movie
-      }}
-    </p>
+
+    <v-data-table
+      :items="movies"
+      :headers="movieHeaders"
+      :items-per-page="5"
+      class="elevation-1"
+    ></v-data-table>
+
   </div>
 </template>
 
@@ -21,6 +21,7 @@ export default {
   data() {
     return {
       movies: [],
+      movieHeaders: [],
       apiURL: process.env.VUE_APP_API_URL,
       apiToken: process.env.VUE_APP_API_TOKEN
     }
@@ -40,7 +41,19 @@ export default {
         then(res => {
           const items = res.data
           this.movies = items.docs
+          if (this.movieHeaders.length === 0) {
+            this.loadMovieHeaders()
+          }
         })
+    },
+    loadMovieHeaders() {
+      const movie = this.movies[0]
+      for (let key of Object.keys(movie)) {
+        this.movieHeaders.push({
+          text: key,
+          value: key
+        })
+      }
     }
   }
 }
