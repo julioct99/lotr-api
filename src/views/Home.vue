@@ -2,13 +2,13 @@
   <div class="container mt-5 text-center">
     <h1>Home</h1>
     <v-tabs align-with-title>
-      <v-tab to="movies">
+      <v-tab to="/tables/movies">
         MOVIES
       </v-tab>
-      <v-tab to="characters">
+      <v-tab to="/tables/characters">
         CHARACTERS
       </v-tab>
-      <v-tab to="quotes">
+      <v-tab to="/tables/quotes">
         QUOTES
       </v-tab>
     </v-tabs>
