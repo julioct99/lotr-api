@@ -106,7 +106,7 @@
 
 <script>
 import QuoteTable from "./QuoteTable.vue";
-import store from "../shared/store";
+import store from "../store/main";
 
 export default {
   components: {

@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import store from "../shared/store";
+import store from "../store/main";
 
 export default {
   props: {
