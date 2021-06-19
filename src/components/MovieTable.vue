@@ -29,49 +29,23 @@
 </template>
 
 <script>
-import axios from 'axios';
+import store from '../shared/store'
 
 export default {
   data() {
     return {
       loading: false,
-      movies: [],
-      movieHeaders: [],
-      apiURL: process.env.VUE_APP_API_URL,
-      apiToken: process.env.VUE_APP_API_TOKEN
     }
   },
   created() {
-    this.loadItems()
+    store.init()
   },
-  methods: {
-    loadItems() {
-      this.loading = true
-      const url = `${this.apiURL}/movie`
-      console.log(url);
-      axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${this.apiToken}`
-        }
-      }).
-        then(res => {
-          const items = res.data
-          this.movies = items.docs
-          if (this.movieHeaders.length === 0) {
-            this.loadMovieHeaders()
-          }
-          this.loading = false
-        })
+  computed: {
+    movies() {
+      return store.getMovies()
     },
-    loadMovieHeaders() {
-      const movie = this.movies[0]
-      for (let key of Object.keys(movie)) {
-        if (key === '_id') continue
-        this.movieHeaders.push({
-          text: key,
-          value: key
-        })
-      }
+    movieHeaders() {
+      return store.getMovieHeaders()
     }
   }
 }
