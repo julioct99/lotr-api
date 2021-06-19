@@ -101,18 +101,13 @@ export default {
     },
     saveQuote() {
       this.dialog = false;
-      let request = null;
       if (this.editMode) {
         this.editedQuoteRef.dialog = this.editedQuote.dialog;
-        request = `PUT http://backend.com/quotes/${this.editedQuote._id}`;
         store.updateQuote(this.editedQuote);
         this.editMode = false;
       } else {
-        request = `POST http://backend.com/quotes/${this.editedQuote._id}`;
         store.insertQuote(this.editedQuote);
       }
-      alert(request);
-      requestStore.insertRequest(request);
       this.editedQuote = {};
       this.editedQuoteRef = null;
     },
@@ -129,7 +124,6 @@ export default {
     },
     duplicateQuote(quote) {
       this.dialog = true;
-      // this.editedQuoteRef = quote;
       this.editedQuote = Object.assign({}, quote);
     },
   },

@@ -1,6 +1,6 @@
 <template>
   <div class="container my-5">
-    <h1 class="mb-5">REQUESTS</h1>
+    <h1 class="mb-5 text-center">REQUESTS</h1>
     <v-btn
       color="primary"
       class="mb-5"
@@ -58,8 +58,8 @@ export default {
       let _list = [...this.state.requests];
       return _list.sort((a, b) =>
         this.sortDescending
-          ? new Date(a.date) - new Date(b.date)
-          : new Date(b.date) - new Date(a.date)
+          ? new Date(b.date) - new Date(a.date)
+          : new Date(a.date) - new Date(b.date)
       );
     },
   },
