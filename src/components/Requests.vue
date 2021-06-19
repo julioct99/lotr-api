@@ -1,6 +1,6 @@
 <template>
   <div class="container my-5">
-    <h1 class="mb-5">REQUESTS</h1>
+    <h1 class="mb-5 text-center">REQUESTS</h1>
     <v-btn
       color="primary"
       class="mb-5"
@@ -15,9 +15,15 @@
       <v-list-item :key="request.id" v-for="request in sortedRequests">
         <v-list-item-content>
           <v-list-item-title>
-            <v-icon class="mr-5"> {{ getIcon(request) }} </v-icon>
-            {{ request.request }} -
-            {{ request.date.toLocaleString() }}
+            <div class="row">
+              <div class="col-sm-8">
+                <v-icon class="mr-5"> {{ getIcon(request) }} </v-icon>
+                {{ request.request }}
+              </div>
+              <div class="col-sm-4">
+                {{ request.date.toLocaleString() }}
+              </div>
+            </div>
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
@@ -52,8 +58,8 @@ export default {
       let _list = [...this.state.requests];
       return _list.sort((a, b) =>
         this.sortDescending
-          ? new Date(a.date) - new Date(b.date)
-          : new Date(b.date) - new Date(a.date)
+          ? new Date(b.date) - new Date(a.date)
+          : new Date(a.date) - new Date(b.date)
       );
     },
   },

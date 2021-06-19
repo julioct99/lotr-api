@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { generateId } from '../shared/utils';
+import requestStore from './requests';
 
 const apiURL = process.env.VUE_APP_API_URL;
 const apiToken = process.env.VUE_APP_API_TOKEN;
@@ -100,6 +101,9 @@ const store = {
     const updatedQuotes = [...this.state.quotes];
     updatedQuotes[index] = updatedQuote;
     this.state.quotes = updatedQuotes;
+    const request = `PUT http://backend.com/quotes/${oldQuote._id}`;
+    alert(request);
+    requestStore.insertRequest(request);
   },
   insertQuote(quote) {
     const _quote = {
@@ -111,6 +115,9 @@ const store = {
     console.log(_quote);
     const newQuotes = [...this.state.quotes, _quote];
     this.state.quotes = newQuotes;
+    const request = `POST http://backend.com/quotes/${_quote._id}`;
+    alert(request);
+    requestStore.insertRequest(request);
   },
   getCharacter(id) {
     let characters = this.getCharacters();
