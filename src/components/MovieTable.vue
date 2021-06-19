@@ -31,9 +31,6 @@ export default {
       loading: false,
     };
   },
-  created() {
-    store.init();
-  },
   computed: {
     movies() {
       return store.getMovies();
