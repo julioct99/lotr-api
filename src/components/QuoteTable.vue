@@ -1,7 +1,17 @@
 <template>
   <div class="container text-center">
     <v-card v-if="!loading" class="elevation-8 mt-5">
-      <v-card-title>QUOTES</v-card-title>
+      <v-card-title
+        >QUOTES
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="dialogSearch"
+          append-icon="mdi-magnify"
+          label="Search dialog"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
       <v-data-table
         :items="filteredQuotes"
         :headers="quoteHeaders"
@@ -40,6 +50,9 @@
           <v-icon small class="mr-2" @click="editQuote(item)">
             mdi-pencil
           </v-icon>
+          <v-icon class="mr-2" small @click="deleteQuote(item)">
+            mdi-delete
+          </v-icon>
           <v-icon small @click="duplicateQuote(item)">
             mdi-content-duplicate
           </v-icon>
@@ -61,7 +74,8 @@
 </template>
 
 <script>
-import store from "../shared/store";
+import store from "../store/main";
+import requestStore from "../store/requests";
 
 export default {
   props: {
@@ -70,11 +84,12 @@ export default {
   },
   data() {
     return {
-      test: false,
-      loading: false,
+      state: store.state,
       dialog: false,
       editedQuote: { dialog: "" },
       editedQuoteRef: null,
+      editMode: false,
+      dialogSearch: "",
     };
   },
   methods: {
@@ -86,30 +101,50 @@ export default {
     },
     saveQuote() {
       this.dialog = false;
-      this.editedQuoteRef.dialog = this.editedQuote.dialog;
-      store.updateQuote(this.editedQuote);
+      let request = null;
+      if (this.editMode) {
+        this.editedQuoteRef.dialog = this.editedQuote.dialog;
+        request = `PUT http://backend.com/quotes/${this.editedQuote._id}`;
+        store.updateQuote(this.editedQuote);
+        this.editMode = false;
+      } else {
+        request = `POST http://backend.com/quotes/${this.editedQuote._id}`;
+        store.insertQuote(this.editedQuote);
+      }
+      alert(request);
+      requestStore.insertRequest(request);
       this.editedQuote = {};
       this.editedQuoteRef = null;
     },
     editQuote(quote) {
+      this.editMode = true;
       this.dialog = true;
       this.editedQuoteRef = quote;
       this.editedQuote = Object.assign({}, quote);
     },
+    deleteQuote(quote) {
+      const request = `DELETE http://backend.com/quotes/${quote._id}`;
+      alert(request);
+      requestStore.insertRequest(request);
+    },
     duplicateQuote(quote) {
       this.dialog = true;
-      this.editedQuoteRef = quote;
+      // this.editedQuoteRef = quote;
       this.editedQuote = Object.assign({}, quote);
     },
   },
   computed: {
+    loading() {
+      return this.state.quotesLoading;
+    },
     quotes() {
       let _quotes = store.getQuotes();
       _quotes = _quotes.map((q) => ({
         ...q,
         ["characterId"]: q.character,
-        ["movie"]: store.getMovie(q.movie).name,
-        ["character"]: store.getCharacter(q.character).name,
+        ["movieId"]: q.movie,
+        ["movie"]: store.getMovie(q.movie)?.name,
+        ["character"]: store.getCharacter(q.character)?.name,
       }));
       return _quotes;
     },
@@ -118,6 +153,7 @@ export default {
       _headers.push({
         text: "actions",
         value: "actions",
+        width: "100px",
       });
       return _headers;
     },
@@ -125,6 +161,11 @@ export default {
       let quotes = [...this.quotes];
       if (this.derived && this.characterId) {
         quotes = quotes.filter((q) => q.characterId === this.characterId);
+      }
+      if (this.dialogSearch.length > 0) {
+        quotes = quotes.filter((q) =>
+          q.dialog.toLowerCase().includes(this.dialogSearch.toLowerCase())
+        );
       }
       return quotes;
     },
