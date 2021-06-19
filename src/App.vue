@@ -6,6 +6,7 @@
       <v-tabs right class="mr-5">
         <v-tab to="/"> HOME </v-tab>
         <v-tab to="/tables"> TABLES </v-tab>
+        <v-tab to="/requests"> REQUESTS </v-tab>
       </v-tabs>
     </v-app-bar>
 
