@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import store from '../shared/store'
 
 export default {
   props: {
@@ -39,45 +39,18 @@ export default {
   data() {
     return {
       loading: false,
-      quotes: [],
-      quoteHeaders: [],
-      apiURL: process.env.VUE_APP_API_URL,
-      apiToken: process.env.VUE_APP_API_TOKEN
     }
   },
   created() {
-    this.loadItems()
-  },
-  methods: {
-    loadItems() {
-      this.loading = true
-      const url = `${this.apiURL}/quote`
-      axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${this.apiToken}`
-        }
-      }).
-        then(res => {
-          const items = res.data
-          this.quotes = items.docs
-          if (this.quoteHeaders.length === 0) {
-            this.loadQuoteHeaders()
-          }
-          this.loading = false
-        })
-    },
-    loadQuoteHeaders() {
-      const quote = this.quotes[0]
-      for (let key of Object.keys(quote)) {
-        if (key === '_id') continue
-        this.quoteHeaders.push({
-          text: key,
-          value: key
-        })
-      }
-    }
+    store.init()
   },
   computed: {
+    quotes() {
+      return store.getQuotes()
+    },
+    quoteHeaders() {
+      return store.getQuoteHeaders()
+    },
     filteredQuotes() {
       let quotes = [...this.quotes]
       if (this.derived && this.characterId) {
