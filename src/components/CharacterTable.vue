@@ -68,7 +68,17 @@
       v-if="!loading"
       class="elevation-8 mt-5"
     >
-      <v-card-title>CHARACTERS</v-card-title>
+      <v-card-title>CHARACTERS
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="nameSearch"
+          append-icon="mdi-magnify"
+          label="Search character name"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+
       <v-data-table
         :items="filteredCharacters"
         :headers="characterHeaders"
@@ -115,6 +125,7 @@ export default {
   data() {
     return {
       loading: false,
+      nameSearch: "",
       characters: [],
       genders: ["Male", "Female"],
       genderFilter: "Female",
@@ -166,6 +177,9 @@ export default {
       }
       if (this.raceFilters.length > 0) {
         characters = characters.filter(c => this.raceFilters.includes(c.race))
+      }
+      if (this.nameSearch.length > 0) {
+        characters = characters.filter(c => c.name.toLowerCase().startsWith(this.nameSearch.toLowerCase()))
       }
       return characters
     }
