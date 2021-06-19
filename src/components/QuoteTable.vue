@@ -40,6 +40,9 @@
           <v-icon small class="mr-2" @click="editQuote(item)">
             mdi-pencil
           </v-icon>
+          <v-icon class="mr-2" small @click="deleteQuote(item)">
+            mdi-delete
+          </v-icon>
           <v-icon small @click="duplicateQuote(item)">
             mdi-content-duplicate
           </v-icon>
@@ -62,6 +65,7 @@
 
 <script>
 import store from "../store/main";
+import requestStore from "../store/requests";
 
 export default {
   props: {
@@ -74,6 +78,7 @@ export default {
       dialog: false,
       editedQuote: { dialog: "" },
       editedQuoteRef: null,
+      editMode: false,
     };
   },
   methods: {
@@ -86,14 +91,29 @@ export default {
     saveQuote() {
       this.dialog = false;
       this.editedQuoteRef.dialog = this.editedQuote.dialog;
-      store.updateQuote(this.editedQuote);
+      let request = null;
+      if (this.editMode) {
+        request = `PUT http://backend.com/quotes/${this.editedQuote._id}`;
+        store.updateQuote(this.editedQuote);
+        this.editMode = false;
+      } else {
+        request = `POST http://backend.com/quotes/${this.editedQuote._id}`;
+      }
+      alert(request);
+      requestStore.insertRequest(request);
       this.editedQuote = {};
       this.editedQuoteRef = null;
     },
     editQuote(quote) {
+      this.editMode = true;
       this.dialog = true;
       this.editedQuoteRef = quote;
       this.editedQuote = Object.assign({}, quote);
+    },
+    deleteQuote(quote) {
+      const request = `DELETE http://backend.com/quotes/${quote._id}`;
+      alert(request);
+      requestStore.insertRequest(request);
     },
     duplicateQuote(quote) {
       this.dialog = true;
