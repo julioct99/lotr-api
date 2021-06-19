@@ -1,8 +1,18 @@
 <template>
-  <div class="container text-center">
-    <h1>REQUESTS</h1>
+  <div class="container my-5">
+    <h1 class="mb-5">REQUESTS</h1>
+    <v-btn
+      color="primary"
+      class="mb-5"
+      @click="sortDescending = !sortDescending"
+    >
+      Sort by date
+      <v-icon class="ms-2">
+        {{ sortDescending ? "mdi-arrow-down" : "mdi-arrow-up" }}
+      </v-icon>
+    </v-btn>
     <v-card class="mx-auto" tile>
-      <v-list-item :key="request.id" v-for="request in state.requests">
+      <v-list-item :key="request.id" v-for="request in sortedRequests">
         <v-list-item-content>
           <v-list-item-title>
             <v-icon class="mr-5"> {{ getIcon(request) }} </v-icon>
@@ -22,6 +32,7 @@ export default {
   data() {
     return {
       state: requestStore.state,
+      sortDescending: true,
     };
   },
   methods: {
@@ -34,6 +45,16 @@ export default {
         case "POST":
           return "mdi-plus";
       }
+    },
+  },
+  computed: {
+    sortedRequests() {
+      let _list = [...this.state.requests];
+      return _list.sort((a, b) =>
+        this.sortDescending
+          ? new Date(a.date) - new Date(b.date)
+          : new Date(b.date) - new Date(a.date)
+      );
     },
   },
 };
