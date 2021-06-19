@@ -1,7 +1,17 @@
 <template>
   <div class="container text-center">
     <v-card v-if="!loading" class="elevation-8 mt-5">
-      <v-card-title>QUOTES</v-card-title>
+      <v-card-title
+        >QUOTES
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="dialogSearch"
+          append-icon="mdi-magnify"
+          label="Search dialog"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
       <v-data-table
         :items="filteredQuotes"
         :headers="quoteHeaders"
@@ -79,6 +89,7 @@ export default {
       editedQuote: { dialog: "" },
       editedQuoteRef: null,
       editMode: false,
+      dialogSearch: "",
     };
   },
   methods: {
@@ -149,6 +160,11 @@ export default {
       let quotes = [...this.quotes];
       if (this.derived && this.characterId) {
         quotes = quotes.filter((q) => q.characterId === this.characterId);
+      }
+      if (this.dialogSearch.length > 0) {
+        quotes = quotes.filter((q) =>
+          q.dialog.toLowerCase().includes(this.dialogSearch.toLowerCase())
+        );
       }
       return quotes;
     },
