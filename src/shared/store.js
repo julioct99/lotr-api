@@ -74,6 +74,15 @@ const store = {
     if (this.state.characters.length === 0) this.fetchCharacters();
     if (this.state.quotes.length === 0) this.fetchQuotes();
   },
+  // AUX METHODS
+  getMovie(id) {
+    let movies = this.getMovies();
+    return movies.filter((m) => m._id === id)[0];
+  },
+  getCharacter(id) {
+    let characters = this.getCharacters();
+    return characters.filter((c) => c._id === id)[0];
+  },
 };
 
 export default store;
