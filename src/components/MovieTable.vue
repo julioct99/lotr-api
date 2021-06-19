@@ -23,15 +23,18 @@
 </template>
 
 <script>
-import store from "../shared/store";
+import store from "../store/main";
 
 export default {
   data() {
     return {
-      loading: false,
+      state: store.state,
     };
   },
   computed: {
+    loading() {
+      return this.state.moviesLoading;
+    },
     movies() {
       return store.getMovies();
     },
