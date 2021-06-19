@@ -153,6 +153,7 @@ export default {
       _headers.push({
         text: "actions",
         value: "actions",
+        width: "100px",
       });
       return _headers;
     },
