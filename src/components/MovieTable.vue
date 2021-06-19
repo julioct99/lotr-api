@@ -1,9 +1,6 @@
 <template>
   <div class="container text-center">
-    <v-card
-      v-if="!loading"
-      class="elevation-8 mt-5"
-    >
+    <v-card v-if="!loading" class="elevation-8 mt-5">
       <v-card-title>MOVIES</v-card-title>
       <v-data-table
         :items="movies"
@@ -14,10 +11,7 @@
 
     <div v-if="loading">
       <v-sheet class="pa-3 mt-5 elevation-8">
-        <v-skeleton-loader
-          class="mx-auto"
-          type="table"
-        ></v-skeleton-loader>
+        <v-skeleton-loader class="mx-auto" type="table"></v-skeleton-loader>
       </v-sheet>
       <v-progress-linear
         indeterminate
@@ -29,26 +23,23 @@
 </template>
 
 <script>
-import store from '../shared/store'
+import store from "../shared/store";
 
 export default {
   data() {
     return {
       loading: false,
-    }
-  },
-  created() {
-    store.init()
+    };
   },
   computed: {
     movies() {
-      return store.getMovies()
+      return store.getMovies();
     },
     movieHeaders() {
-      return store.getMovieHeaders()
-    }
-  }
-}
+      return store.getMovieHeaders();
+    },
+  },
+};
 </script>
 
 <style>

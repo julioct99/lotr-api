@@ -1,11 +1,7 @@
 <template>
   <div class="container text-center mb-5">
-
     <div class="row mt-5">
-      <v-radio-group
-        class="col-sm-2"
-        v-model="genderFilter"
-      >
+      <v-radio-group class="col-sm-2" v-model="genderFilter">
         <v-radio
           v-for="gender in genders"
           :key="gender"
@@ -16,7 +12,9 @@
           @click="genderFilterOn = !genderFilterOn"
           class="w-25"
           :color="genderFilterOn ? 'primary' : 'gray'"
-        > {{ genderFilterOn ? 'On' : 'Off' }} </v-btn>
+        >
+          {{ genderFilterOn ? "On" : "Off" }}
+        </v-btn>
       </v-radio-group>
       <div class="col-sm-4">
         <div class="row">
@@ -64,11 +62,9 @@
       </div>
     </div>
 
-    <v-card
-      v-if="!loading"
-      class="elevation-8 mt-5"
-    >
-      <v-card-title>CHARACTERS
+    <v-card v-if="!loading" class="elevation-8 mt-5">
+      <v-card-title
+        >CHARACTERS
         <v-spacer></v-spacer>
         <v-text-field
           v-model="nameSearch"
@@ -92,18 +88,12 @@
     </v-card>
 
     <div v-if="selectedRow.length > 0">
-      <quote-table
-        derived
-        :characterId="selectedRow[0]._id"
-      />
+      <quote-table derived :characterId="selectedCharacter._id" />
     </div>
 
     <div v-if="loading">
       <v-sheet class="pa-3 mt-5 elevation-8">
-        <v-skeleton-loader
-          class="mx-auto"
-          type="table"
-        ></v-skeleton-loader>
+        <v-skeleton-loader class="mx-auto" type="table"></v-skeleton-loader>
       </v-sheet>
       <v-progress-linear
         indeterminate
@@ -115,12 +105,12 @@
 </template>
 
 <script>
-import QuoteTable from './QuoteTable.vue'
-import store from '../shared/store'
+import QuoteTable from "./QuoteTable.vue";
+import store from "../shared/store";
 
 export default {
   components: {
-    QuoteTable
+    QuoteTable,
   },
   data() {
     return {
@@ -131,38 +121,45 @@ export default {
       genderFilterOn: false,
       raceFilters: [],
       selectedRow: [],
-    }
-  },
-  created() {
-    store.init()
+    };
   },
   methods: {
     handleRowClick(row) {
       console.log(row);
-    }
+    },
   },
   computed: {
+    selectedCharacter() {
+      if (this.selectedRow.length === 0) return;
+      const id = this.selectedRow[0]._id;
+      console.log(id);
+      return store.getCharacter(id);
+    },
     characters() {
-      return store.getCharacters()
+      return store.getCharacters();
     },
     characterHeaders() {
-      return store.getCharacterHeaders()
+      return store.getCharacterHeaders();
     },
     filteredCharacters() {
-      let characters = [...this.characters]
+      let characters = [...this.characters];
       if (this.genderFilterOn) {
-        characters = characters.filter(c => c.gender === this.genderFilter)
+        characters = characters.filter((c) => c.gender === this.genderFilter);
       }
       if (this.raceFilters.length > 0) {
-        characters = characters.filter(c => this.raceFilters.includes(c.race))
+        characters = characters.filter((c) =>
+          this.raceFilters.includes(c.race)
+        );
       }
       if (this.nameSearch.length > 0) {
-        characters = characters.filter(c => c.name.toLowerCase().startsWith(this.nameSearch.toLowerCase()))
+        characters = characters.filter((c) =>
+          c.name.toLowerCase().startsWith(this.nameSearch.toLowerCase())
+        );
       }
-      return characters
-    }
-  }
-}
+      return characters;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
