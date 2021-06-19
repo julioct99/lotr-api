@@ -1,13 +1,9 @@
 <template>
   <div class="container text-center">
-    <h2 class="mb-5">CharacterTable Component</h2>
 
-    <v-container
-      class="px-0 row"
-      fluid
-    >
+    <div class="row mt-5">
       <v-radio-group
-        class="col-sm-3"
+        class="col-sm-2"
         v-model="genderFilter"
       >
         <v-radio
@@ -22,7 +18,52 @@
           :color="genderFilterOn ? 'primary' : 'gray'"
         > {{ genderFilterOn ? 'On' : 'Off' }} </v-btn>
       </v-radio-group>
-    </v-container>
+      <div class="col-sm-4">
+        <div class="row">
+          <div class="col-sm-6">
+            <v-checkbox
+              class="shrink mr-0 mt-0"
+              v-model="raceFilters"
+              label="Human"
+              value="Human"
+            ></v-checkbox>
+            <v-checkbox
+              class="shrink mr-0 mt-0"
+              v-model="raceFilters"
+              label="Elf"
+              value="Elf"
+            ></v-checkbox>
+            <v-checkbox
+              class="shrink mr-0 mt-0"
+              v-model="raceFilters"
+              label="Dwarf"
+              value="Dwarf"
+            ></v-checkbox>
+          </div>
+          <div class="col-sm-6">
+            <v-checkbox
+              class="shrink mr-0 mt-0"
+              v-model="raceFilters"
+              label="Hobbit"
+              value="Hobbit"
+            ></v-checkbox>
+            <v-checkbox
+              class="shrink mr-0 mt-0"
+              v-model="raceFilters"
+              label="Orc"
+              value="Orc"
+            ></v-checkbox>
+            <v-checkbox
+              class="shrink mr-0 mt-0"
+              v-model="raceFilters"
+              label="Dragon"
+              value="Dragon"
+            ></v-checkbox>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <v-data-table
       :items="filteredCharacters"
       :headers="characterHeaders"
@@ -43,6 +84,7 @@ export default {
       genderFilter: "Female",
       genderFilterOn: false,
       characterHeaders: [],
+      raceFilters: [],
       apiURL: process.env.VUE_APP_API_URL,
       apiToken: process.env.VUE_APP_API_TOKEN
     }
@@ -79,6 +121,9 @@ export default {
       let characters = [...this.characters]
       if (this.genderFilterOn) {
         characters = characters.filter(c => c.gender === this.genderFilter)
+      }
+      if (this.raceFilters.length > 0) {
+        characters = characters.filter(c => this.raceFilters.includes(c.race))
       }
       return characters
     }
