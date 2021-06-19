@@ -90,14 +90,15 @@ export default {
     },
     saveQuote() {
       this.dialog = false;
-      this.editedQuoteRef.dialog = this.editedQuote.dialog;
       let request = null;
       if (this.editMode) {
+        this.editedQuoteRef.dialog = this.editedQuote.dialog;
         request = `PUT http://backend.com/quotes/${this.editedQuote._id}`;
         store.updateQuote(this.editedQuote);
         this.editMode = false;
       } else {
         request = `POST http://backend.com/quotes/${this.editedQuote._id}`;
+        store.insertQuote(this.editedQuote);
       }
       alert(request);
       requestStore.insertRequest(request);
@@ -117,7 +118,7 @@ export default {
     },
     duplicateQuote(quote) {
       this.dialog = true;
-      this.editedQuoteRef = quote;
+      // this.editedQuoteRef = quote;
       this.editedQuote = Object.assign({}, quote);
     },
   },
@@ -130,8 +131,9 @@ export default {
       _quotes = _quotes.map((q) => ({
         ...q,
         ["characterId"]: q.character,
-        ["movie"]: store.getMovie(q.movie).name,
-        ["character"]: store.getCharacter(q.character).name,
+        ["movieId"]: q.movie,
+        ["movie"]: store.getMovie(q.movie)?.name,
+        ["character"]: store.getCharacter(q.character)?.name,
       }));
       return _quotes;
     },

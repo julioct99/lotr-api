@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { generateId } from '../shared/utils';
 
 const apiURL = process.env.VUE_APP_API_URL;
 const apiToken = process.env.VUE_APP_API_TOKEN;
@@ -99,6 +100,17 @@ const store = {
     const updatedQuotes = [...this.state.quotes];
     updatedQuotes[index] = updatedQuote;
     this.state.quotes = updatedQuotes;
+  },
+  insertQuote(quote) {
+    const _quote = {
+      _id: generateId(),
+      dialog: quote.dialog,
+      movie: quote.movieId,
+      character: quote.characterId,
+    };
+    console.log(_quote);
+    const newQuotes = [...this.state.quotes, _quote];
+    this.state.quotes = newQuotes;
   },
   getCharacter(id) {
     let characters = this.getCharacters();
