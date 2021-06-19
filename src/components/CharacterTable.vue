@@ -68,15 +68,28 @@
       :items="filteredCharacters"
       :headers="characterHeaders"
       :items-per-page="5"
+      item-key="_id"
       class="elevation-8"
+      :single-select="true"
+      show-select
+      v-model="selectedRow"
+      @click:row="handleRowClick"
     ></v-data-table>
+
+    <div v-if="selectedRow.length > 0">
+      <QuoteTable />
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import QuoteTable from './QuoteTable.vue'
 
 export default {
+  components: {
+    QuoteTable
+  },
   data() {
     return {
       characters: [],
@@ -85,6 +98,7 @@ export default {
       genderFilterOn: false,
       characterHeaders: [],
       raceFilters: [],
+      selectedRow: [],
       apiURL: process.env.VUE_APP_API_URL,
       apiToken: process.env.VUE_APP_API_TOKEN
     }
@@ -93,6 +107,9 @@ export default {
     this.loadItems()
   },
   methods: {
+    handleRowClick(row) {
+      console.log(row);
+    },
     loadItems() {
       const url = `${this.apiURL}/character`
       axios.get(url, { headers: { Authorization: `Bearer ${this.apiToken}` } })
@@ -131,5 +148,5 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 </style>
