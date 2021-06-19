@@ -1,22 +1,11 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
+    <v-app-bar app color="primary" dark>
       <v-icon class="ms-5">mdi-ring</v-icon>
 
-      <v-tabs
-        right
-        class="mr-5"
-      >
-        <v-tab to="/">
-          HOME
-        </v-tab>
-        <v-tab to="/tables">
-          TABLES
-        </v-tab>
+      <v-tabs right class="mr-5">
+        <v-tab to="/"> HOME </v-tab>
+        <v-tab to="/tables"> TABLES </v-tab>
       </v-tabs>
     </v-app-bar>
 
@@ -27,9 +16,8 @@
 </template>
 
 <script>
-
 export default {
-  name: 'App',
+  name: "App",
 
   data: () => ({
     //
