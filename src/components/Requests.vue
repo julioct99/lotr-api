@@ -15,9 +15,15 @@
       <v-list-item :key="request.id" v-for="request in sortedRequests">
         <v-list-item-content>
           <v-list-item-title>
-            <v-icon class="mr-5"> {{ getIcon(request) }} </v-icon>
-            {{ request.request }} -
-            {{ request.date.toLocaleString() }}
+            <div class="row">
+              <div class="col-sm-8">
+                <v-icon class="mr-5"> {{ getIcon(request) }} </v-icon>
+                {{ request.request }}
+              </div>
+              <div class="col-sm-4">
+                {{ request.date.toLocaleString() }}
+              </div>
+            </div>
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
