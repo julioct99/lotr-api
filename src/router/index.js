@@ -4,6 +4,7 @@ import Tables from '../views/Tables.vue';
 import MovieTable from '../components/MovieTable.vue';
 import CharacterTable from '../components/CharacterTable.vue';
 import QuoteTable from '../components/QuoteTable.vue';
+import Requests from '../components/Requests.vue';
 
 Vue.use(VueRouter);
 
@@ -26,6 +27,7 @@ const routes = [
       },
     ],
   },
+  { path: '/requests', component: Requests },
 ];
 
 const router = new VueRouter({
