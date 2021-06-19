@@ -123,9 +123,6 @@ export default {
       selectedRow: [],
     };
   },
-  created() {
-    store.init();
-  },
   methods: {
     handleRowClick(row) {
       console.log(row);

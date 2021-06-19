@@ -79,6 +79,18 @@ const store = {
     let movies = this.getMovies();
     return movies.filter((m) => m._id === id)[0];
   },
+  getQuote(id) {
+    let quotes = this.getQuotes();
+    return quotes.filter((q) => q._id === id)[0];
+  },
+  updateQuote(quote) {
+    const oldQuote = this.getQuote(quote._id);
+    const index = this.state.quotes.indexOf(oldQuote);
+    const updatedQuote = { ...oldQuote, ['dialog']: quote.dialog };
+    const updatedQuotes = [...this.state.quotes];
+    updatedQuotes[index] = updatedQuote;
+    this.state.quotes = updatedQuotes;
+  },
   getCharacter(id) {
     let characters = this.getCharacters();
     return characters.filter((c) => c._id === id)[0];
