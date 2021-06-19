@@ -11,7 +11,6 @@ const requestStore = {
     const _request = { request, date: new Date(), id: generateId() };
     const newRequestList = [...this.state.requests, _request];
     this.state.requests = newRequestList;
-    console.log(this.state.requests);
   },
 };
 
