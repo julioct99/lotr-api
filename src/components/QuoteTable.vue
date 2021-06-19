@@ -6,7 +6,7 @@
     >
       <v-card-title>QUOTES</v-card-title>
       <v-data-table
-        :items="quotes"
+        :items="filteredQuotes"
         :headers="quoteHeaders"
         :items-per-page="5"
       ></v-data-table>
@@ -32,6 +32,10 @@
 import axios from 'axios';
 
 export default {
+  props: {
+    derived: Boolean,
+    characterId: String
+  },
   data() {
     return {
       loading: false,
@@ -48,7 +52,6 @@ export default {
     loadItems() {
       this.loading = true
       const url = `${this.apiURL}/quote`
-      console.log(url);
       axios.get(url, {
         headers: {
           Authorization: `Bearer ${this.apiToken}`
@@ -72,6 +75,15 @@ export default {
           value: key
         })
       }
+    }
+  },
+  computed: {
+    filteredQuotes() {
+      let quotes = [...this.quotes]
+      if (this.derived && this.characterId) {
+        quotes = quotes.filter(q => q.character === this.characterId)
+      }
+      return quotes
     }
   }
 }

@@ -82,7 +82,10 @@
     </v-card>
 
     <div v-if="selectedRow.length > 0">
-      <quote-table />
+      <quote-table
+        derived
+        :characterId="selectedRow[0]._id"
+      />
     </div>
 
     <div v-if="loading">
