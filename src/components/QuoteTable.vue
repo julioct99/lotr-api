@@ -70,8 +70,7 @@ export default {
   },
   data() {
     return {
-      test: false,
-      loading: false,
+      state: store.state,
       dialog: false,
       editedQuote: { dialog: "" },
       editedQuoteRef: null,
@@ -103,6 +102,9 @@ export default {
     },
   },
   computed: {
+    loading() {
+      return this.state.quotesLoading;
+    },
     quotes() {
       let _quotes = store.getQuotes();
       _quotes = _quotes.map((q) => ({

@@ -114,7 +114,7 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      state: store.state,
       nameSearch: "",
       genders: ["Male", "Female"],
       genderFilter: "Female",
@@ -129,6 +129,9 @@ export default {
     },
   },
   computed: {
+    loading() {
+      return this.state.charactersLoading;
+    },
     selectedCharacter() {
       if (this.selectedRow.length === 0) return;
       const id = this.selectedRow[0]._id;
