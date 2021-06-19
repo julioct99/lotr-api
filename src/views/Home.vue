@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5 text-center">
-    <h1>Home</h1>
+    <h1>TABLES</h1>
     <v-tabs align-with-title>
       <v-tab to="/tables/movies">
         MOVIES

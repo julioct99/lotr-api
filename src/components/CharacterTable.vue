@@ -1,5 +1,5 @@
 <template>
-  <div class="container text-center">
+  <div class="container text-center mb-5">
 
     <div class="row mt-5">
       <v-radio-group
@@ -64,20 +64,39 @@
       </div>
     </div>
 
-    <v-data-table
-      :items="filteredCharacters"
-      :headers="characterHeaders"
-      :items-per-page="5"
-      item-key="_id"
-      class="elevation-8"
-      :single-select="true"
-      show-select
-      v-model="selectedRow"
-      @click:row="handleRowClick"
-    ></v-data-table>
+    <v-card
+      v-if="!loading"
+      class="elevation-8 mt-5"
+    >
+      <v-card-title>CHARACTERS</v-card-title>
+      <v-data-table
+        :items="filteredCharacters"
+        :headers="characterHeaders"
+        :items-per-page="5"
+        item-key="_id"
+        :single-select="true"
+        show-select
+        v-model="selectedRow"
+        @click:row="handleRowClick"
+      ></v-data-table>
+    </v-card>
 
     <div v-if="selectedRow.length > 0">
-      <QuoteTable />
+      <quote-table />
+    </div>
+
+    <div v-if="loading">
+      <v-sheet class="pa-3 mt-5 elevation-8">
+        <v-skeleton-loader
+          class="mx-auto"
+          type="table"
+        ></v-skeleton-loader>
+      </v-sheet>
+      <v-progress-linear
+        indeterminate
+        color="cyan"
+        class="mt-5"
+      ></v-progress-linear>
     </div>
   </div>
 </template>
@@ -92,6 +111,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       characters: [],
       genders: ["Male", "Female"],
       genderFilter: "Female",
@@ -111,6 +131,7 @@ export default {
       console.log(row);
     },
     loadItems() {
+      this.loading = true
       const url = `${this.apiURL}/character`
       axios.get(url, { headers: { Authorization: `Bearer ${this.apiToken}` } })
         .then(res => {
@@ -119,6 +140,7 @@ export default {
           if (this.characterHeaders.length === 0) {
             this.loadCharacterHeaders()
           }
+          this.loading = false
         })
     },
     loadCharacterHeaders() {
