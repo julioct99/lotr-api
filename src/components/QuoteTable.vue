@@ -6,7 +6,7 @@
     >
       <v-card-title>QUOTES</v-card-title>
       <v-data-table
-        :items="quotes"
+        :items="filteredQuotes"
         :headers="quoteHeaders"
         :items-per-page="5"
       ></v-data-table>
@@ -29,49 +29,34 @@
 </template>
 
 <script>
-import axios from 'axios';
+import store from '../shared/store'
 
 export default {
+  props: {
+    derived: Boolean,
+    characterId: String
+  },
   data() {
     return {
       loading: false,
-      quotes: [],
-      quoteHeaders: [],
-      apiURL: process.env.VUE_APP_API_URL,
-      apiToken: process.env.VUE_APP_API_TOKEN
     }
   },
   created() {
-    this.loadItems()
+    store.init()
   },
-  methods: {
-    loadItems() {
-      this.loading = true
-      const url = `${this.apiURL}/quote`
-      console.log(url);
-      axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${this.apiToken}`
-        }
-      }).
-        then(res => {
-          const items = res.data
-          this.quotes = items.docs
-          if (this.quoteHeaders.length === 0) {
-            this.loadQuoteHeaders()
-          }
-          this.loading = false
-        })
+  computed: {
+    quotes() {
+      return store.getQuotes()
     },
-    loadQuoteHeaders() {
-      const quote = this.quotes[0]
-      for (let key of Object.keys(quote)) {
-        if (key === '_id') continue
-        this.quoteHeaders.push({
-          text: key,
-          value: key
-        })
+    quoteHeaders() {
+      return store.getQuoteHeaders()
+    },
+    filteredQuotes() {
+      let quotes = [...this.quotes]
+      if (this.derived && this.characterId) {
+        quotes = quotes.filter(q => q.character === this.characterId)
       }
+      return quotes
     }
   }
 }

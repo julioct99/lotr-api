@@ -68,7 +68,17 @@
       v-if="!loading"
       class="elevation-8 mt-5"
     >
-      <v-card-title>CHARACTERS</v-card-title>
+      <v-card-title>CHARACTERS
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="nameSearch"
+          append-icon="mdi-magnify"
+          label="Search character name"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+
       <v-data-table
         :items="filteredCharacters"
         :headers="characterHeaders"
@@ -82,7 +92,10 @@
     </v-card>
 
     <div v-if="selectedRow.length > 0">
-      <quote-table />
+      <quote-table
+        derived
+        :characterId="selectedRow[0]._id"
+      />
     </div>
 
     <div v-if="loading">
@@ -102,8 +115,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 import QuoteTable from './QuoteTable.vue'
+import store from '../shared/store'
 
 export default {
   components: {
@@ -112,50 +125,29 @@ export default {
   data() {
     return {
       loading: false,
-      characters: [],
+      nameSearch: "",
       genders: ["Male", "Female"],
       genderFilter: "Female",
       genderFilterOn: false,
-      characterHeaders: [],
       raceFilters: [],
       selectedRow: [],
-      apiURL: process.env.VUE_APP_API_URL,
-      apiToken: process.env.VUE_APP_API_TOKEN
     }
   },
   created() {
-    this.loadItems()
+    store.init()
   },
   methods: {
     handleRowClick(row) {
       console.log(row);
-    },
-    loadItems() {
-      this.loading = true
-      const url = `${this.apiURL}/character`
-      axios.get(url, { headers: { Authorization: `Bearer ${this.apiToken}` } })
-        .then(res => {
-          const items = res.data
-          this.characters = items.docs
-          if (this.characterHeaders.length === 0) {
-            this.loadCharacterHeaders()
-          }
-          this.loading = false
-        })
-    },
-    loadCharacterHeaders() {
-      const character = this.characters[0]
-      for (let key of Object.keys(character)) {
-        if (key === "_id") continue
-        this.characterHeaders.push({
-          text: key,
-          value: key,
-          align: 'start',
-        })
-      }
     }
   },
   computed: {
+    characters() {
+      return store.getCharacters()
+    },
+    characterHeaders() {
+      return store.getCharacterHeaders()
+    },
     filteredCharacters() {
       let characters = [...this.characters]
       if (this.genderFilterOn) {
@@ -163,6 +155,9 @@ export default {
       }
       if (this.raceFilters.length > 0) {
         characters = characters.filter(c => this.raceFilters.includes(c.race))
+      }
+      if (this.nameSearch.length > 0) {
+        characters = characters.filter(c => c.name.toLowerCase().startsWith(this.nameSearch.toLowerCase()))
       }
       return characters
     }
