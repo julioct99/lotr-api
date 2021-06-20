@@ -1,14 +1,16 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Tables from '../views/Tables.vue';
+import Requests from '../views/Requests.vue';
+import Home from '../views/Home.vue';
 import MovieTable from '../components/MovieTable.vue';
 import CharacterTable from '../components/CharacterTable.vue';
 import QuoteTable from '../components/QuoteTable.vue';
-import Requests from '../components/Requests.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
+  { path: '/', component: Home },
   {
     path: '/tables',
     component: Tables,
