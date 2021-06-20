@@ -43,7 +43,8 @@ export default {
   data() {
     return {
       state: store.state,
-      hiddenColumns: [],
+      hiddenColumns:
+        JSON.parse(localStorage.getItem("hiddenMovieColumns")) || []
     };
   },
   methods: {
@@ -69,6 +70,14 @@ export default {
     movieHeaders() {
       return this.originalHeaders.filter(
         (h) => !this.hiddenColumns.includes(h.value)
+      );
+    },
+  },
+  watch: {
+    hiddenColumns: function () {
+      localStorage.setItem(
+        "hiddenMovieColumns",
+        JSON.stringify(this.hiddenColumns)
       );
     },
   },
