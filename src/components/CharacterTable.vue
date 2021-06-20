@@ -75,6 +75,18 @@
         ></v-text-field>
       </v-card-title>
 
+      <v-btn
+        class="text-left mx-1 my-5"
+        :key="header.value"
+        v-for="header in originalHeaders"
+        @click="toggleHiddenColumn(header.value)"
+        :color="hiddenColumns.includes(header.value) ? 'gray' : 'primary'"
+      >
+        <v-icon class="mr-1">
+          {{ hiddenColumns.includes(header.value) ? "mdi-eye-off" : "mdi-eye" }}
+        </v-icon>
+        {{ header.value }}
+      </v-btn>
       <v-data-table
         :items="filteredCharacters"
         :headers="characterHeaders"
@@ -83,7 +95,6 @@
         :single-select="true"
         show-select
         v-model="selectedRow"
-        @click:row="handleRowClick"
       ></v-data-table>
     </v-card>
 
@@ -121,11 +132,17 @@ export default {
       genderFilterOn: false,
       raceFilters: [],
       selectedRow: [],
+      hiddenColumns: [],
     };
   },
   methods: {
-    handleRowClick(row) {
-      console.log(row);
+    toggleHiddenColumn(column) {
+      if (this.hiddenColumns.includes(column)) {
+        const index = this.hiddenColumns.indexOf(column);
+        this.hiddenColumns.splice(index, 1);
+      } else {
+        this.hiddenColumns.push(column);
+      }
     },
   },
   computed: {
@@ -141,8 +158,13 @@ export default {
     characters() {
       return store.getCharacters();
     },
-    characterHeaders() {
+    originalHeaders() {
       return store.getCharacterHeaders();
+    },
+    characterHeaders() {
+      return this.originalHeaders.filter(
+        (h) => !this.hiddenColumns.includes(h.value)
+      );
     },
     filteredCharacters() {
       let characters = [...this.characters];
