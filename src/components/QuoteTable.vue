@@ -75,7 +75,6 @@
 
 <script>
 import store from "../store/main";
-import requestStore from "../store/requests";
 
 export default {
   props: {
@@ -118,9 +117,7 @@ export default {
       this.editedQuote = Object.assign({}, quote);
     },
     deleteQuote(quote) {
-      const request = `DELETE http://backend.com/quotes/${quote._id}`;
-      alert(request);
-      requestStore.insertRequest(request);
+      store.deleteQuote(quote._id);
     },
     duplicateQuote(quote) {
       this.dialog = true;

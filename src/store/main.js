@@ -119,6 +119,16 @@ const store = {
     alert(request);
     requestStore.insertRequest(request);
   },
+  deleteQuote(id) {
+    const quote = this.getQuote(id);
+    const index = this.state.quotes.indexOf(quote);
+    const oldQuotes = this.getQuotes();
+    const newQuotes = oldQuotes.filter((q, i) => i !== index);
+    this.state.quotes = newQuotes;
+    const request = `DELETE http://backend.com/quotes/${quote._id}`;
+    alert(request);
+    requestStore.insertRequest(request);
+  },
   getCharacter(id) {
     let characters = this.getCharacters();
     return characters.filter((c) => c._id === id)[0];
