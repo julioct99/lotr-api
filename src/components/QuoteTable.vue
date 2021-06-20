@@ -116,10 +116,11 @@ export default {
       editedQuote: { dialog: "" },
       editedQuoteRef: null,
       editMode: false,
-      dialogSearch: "",
-      movieFilterOn: false,
-      movieFilter: [],
-      hiddenColumns: [],
+      dialogSearch: localStorage.getItem("dialogSearch") || "",
+      movieFilterOn: localStorage.getItem("movieFilterOn") || false,
+      movieFilter: JSON.parse(localStorage.getItem("movieFilter")) || [],
+      hiddenColumns:
+        JSON.parse(localStorage.getItem("hiddenQuoteColumns")) || [],
     };
   },
   methods: {
@@ -210,6 +211,23 @@ export default {
       }
 
       return quotes;
+    },
+  },
+  watch: {
+    dialogSearch: function () {
+      localStorage.setItem("dialogSearch", this.dialogSearch);
+    },
+    movieFilterOn: function () {
+      localStorage.setItem("movieFilterOn", this.movieFilterOn);
+    },
+    movieFilter: function () {
+      localStorage.setItem("movieFilter", JSON.stringify(this.movieFilter));
+    },
+    hiddenColumns: function () {
+      localStorage.setItem(
+        "hiddenQuoteColumns",
+        JSON.stringify(this.hiddenColumns)
+      );
     },
   },
 };

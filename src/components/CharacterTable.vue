@@ -126,13 +126,15 @@ export default {
   data() {
     return {
       state: store.state,
-      nameSearch: "",
       genders: ["Male", "Female"],
-      genderFilter: "Female",
-      genderFilterOn: false,
-      raceFilters: [],
-      selectedRow: [],
-      hiddenColumns: [],
+      nameSearch: localStorage.getItem("characterNameSearch") || "",
+      genderFilter: localStorage.getItem("genderFilter") || "Female",
+      genderFilterOn: localStorage.getItem("genderFilterOn") || false,
+      raceFilters: JSON.parse(localStorage.getItem("raceFilters")) || [],
+      selectedRow:
+        JSON.parse(localStorage.getItem("selectedCharacterRow")) || [],
+      hiddenColumns:
+        JSON.parse(localStorage.getItem("hiddenCharacterColumns")) || [],
     };
   },
   methods: {
@@ -182,6 +184,32 @@ export default {
         );
       }
       return characters;
+    },
+  },
+  watch: {
+    nameSearch: function () {
+      localStorage.setItem("characterNameSearch", this.nameSearch);
+    },
+    genderFilter: function () {
+      localStorage.setItem("genderFilter", this.genderFilter);
+    },
+    genderFilterOn: function () {
+      localStorage.setItem("genderFilterOn", this.genderFilterOn);
+    },
+    raceFilters: function () {
+      localStorage.setItem("raceFilters", JSON.stringify(this.raceFilters));
+    },
+    selectedRow: function () {
+      localStorage.setItem(
+        "selectedCharacterRow",
+        JSON.stringify(this.selectedRow)
+      );
+    },
+    hiddenColumns: function () {
+      localStorage.setItem(
+        "hiddenCharacterColumns",
+        JSON.stringify(this.hiddenColumns)
+      );
     },
   },
 };
