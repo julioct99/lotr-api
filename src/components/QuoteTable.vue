@@ -1,5 +1,21 @@
 <template>
   <div class="container text-center">
+    <v-radio-group row v-model="movieFilter">
+      <v-radio
+        v-for="movie in movies"
+        :key="movie"
+        :label="movie"
+        :value="movie"
+      ></v-radio>
+    </v-radio-group>
+    <v-btn
+      @click="movieFilterOn = !movieFilterOn"
+      class="d-block"
+      :color="movieFilterOn ? 'primary' : 'gray'"
+    >
+      Filter by movie: {{ movieFilterOn ? "On" : "Off" }}
+    </v-btn>
+
     <v-card v-if="!loading" class="elevation-8 mt-5">
       <v-card-title
         >QUOTES
@@ -12,6 +28,18 @@
           hide-details
         ></v-text-field>
       </v-card-title>
+      <v-btn
+        class="text-left mx-5 my-5"
+        :key="header.value"
+        v-for="header in originalHeaders"
+        @click="toggleHiddenColumn(header.value)"
+        :color="hiddenColumns.includes(header.value) ? 'gray' : 'primary'"
+      >
+        <v-icon class="mr-3">
+          {{ hiddenColumns.includes(header.value) ? "mdi-eye-off" : "mdi-eye" }}
+        </v-icon>
+        {{ header.value }}
+      </v-btn>
       <v-data-table
         :items="filteredQuotes"
         :headers="quoteHeaders"
@@ -89,9 +117,20 @@ export default {
       editedQuoteRef: null,
       editMode: false,
       dialogSearch: "",
+      movieFilterOn: false,
+      movieFilter: [],
+      hiddenColumns: [],
     };
   },
   methods: {
+    toggleHiddenColumn(column) {
+      if (this.hiddenColumns.includes(column)) {
+        const index = this.hiddenColumns.indexOf(column);
+        this.hiddenColumns.splice(index, 1);
+      } else {
+        this.hiddenColumns.push(column);
+      }
+    },
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -139,13 +178,21 @@ export default {
       }));
       return _quotes;
     },
-    quoteHeaders() {
+    movies() {
+      return store.getMovies().map((m) => m.name);
+    },
+    originalHeaders() {
       let _headers = store.getQuoteHeaders();
       _headers.push({
         text: "actions",
         value: "actions",
         width: "100px",
       });
+      return _headers;
+    },
+    quoteHeaders() {
+      let _headers = this.originalHeaders;
+      _headers = _headers.filter((h) => !this.hiddenColumns.includes(h.value));
       return _headers;
     },
     filteredQuotes() {
@@ -158,6 +205,10 @@ export default {
           q.dialog.toLowerCase().includes(this.dialogSearch.toLowerCase())
         );
       }
+      if (this.movieFilterOn) {
+        quotes = quotes.filter((q) => q.movie === this.movieFilter);
+      }
+
       return quotes;
     },
   },
