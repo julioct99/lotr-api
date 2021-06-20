@@ -1,5 +1,21 @@
 <template>
   <div class="container text-center">
+    <v-radio-group row v-model="movieFilter">
+      <v-radio
+        v-for="movie in movies"
+        :key="movie"
+        :label="movie"
+        :value="movie"
+      ></v-radio>
+    </v-radio-group>
+    <v-btn
+      @click="movieFilterOn = !movieFilterOn"
+      class="d-block"
+      :color="movieFilterOn ? 'primary' : 'gray'"
+    >
+      Filter by movie: {{ movieFilterOn ? "On" : "Off" }}
+    </v-btn>
+
     <v-card v-if="!loading" class="elevation-8 mt-5">
       <v-card-title
         >QUOTES
@@ -89,6 +105,8 @@ export default {
       editedQuoteRef: null,
       editMode: false,
       dialogSearch: "",
+      movieFilterOn: false,
+      movieFilter: [],
     };
   },
   methods: {
@@ -139,6 +157,9 @@ export default {
       }));
       return _quotes;
     },
+    movies() {
+      return store.getMovies().map((m) => m.name);
+    },
     quoteHeaders() {
       let _headers = store.getQuoteHeaders();
       _headers.push({
@@ -157,6 +178,9 @@ export default {
         quotes = quotes.filter((q) =>
           q.dialog.toLowerCase().includes(this.dialogSearch.toLowerCase())
         );
+      }
+      if (this.movieFilterOn) {
+        quotes = quotes.filter((q) => q.movie === this.movieFilter);
       }
       return quotes;
     },
