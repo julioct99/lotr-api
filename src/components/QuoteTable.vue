@@ -28,6 +28,18 @@
           hide-details
         ></v-text-field>
       </v-card-title>
+      <v-btn
+        class="text-left mx-5 my-5"
+        :key="header.value"
+        v-for="header in originalHeaders"
+        @click="toggleHiddenColumn(header.value)"
+        :color="hiddenColumns.includes(header.value) ? 'gray' : 'primary'"
+      >
+        <v-icon class="mr-3">
+          {{ hiddenColumns.includes(header.value) ? "mdi-eye-off" : "mdi-eye" }}
+        </v-icon>
+        {{ header.value }}
+      </v-btn>
       <v-data-table
         :items="filteredQuotes"
         :headers="quoteHeaders"
@@ -107,9 +119,18 @@ export default {
       dialogSearch: "",
       movieFilterOn: false,
       movieFilter: [],
+      hiddenColumns: [],
     };
   },
   methods: {
+    toggleHiddenColumn(column) {
+      if (this.hiddenColumns.includes(column)) {
+        const index = this.hiddenColumns.indexOf(column);
+        this.hiddenColumns.splice(index, 1);
+      } else {
+        this.hiddenColumns.push(column);
+      }
+    },
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -160,13 +181,18 @@ export default {
     movies() {
       return store.getMovies().map((m) => m.name);
     },
-    quoteHeaders() {
+    originalHeaders() {
       let _headers = store.getQuoteHeaders();
       _headers.push({
         text: "actions",
         value: "actions",
         width: "100px",
       });
+      return _headers;
+    },
+    quoteHeaders() {
+      let _headers = this.originalHeaders;
+      _headers = _headers.filter((h) => !this.hiddenColumns.includes(h.value));
       return _headers;
     },
     filteredQuotes() {
@@ -182,6 +208,7 @@ export default {
       if (this.movieFilterOn) {
         quotes = quotes.filter((q) => q.movie === this.movieFilter);
       }
+
       return quotes;
     },
   },
