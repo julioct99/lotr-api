@@ -2,6 +2,20 @@
   <div class="container text-center">
     <v-card v-if="!loading" class="elevation-8 mt-5">
       <v-card-title>MOVIES</v-card-title>
+
+      <v-btn
+        small
+        class="text-left mx-1 my-5"
+        :key="header.value"
+        v-for="header in originalHeaders"
+        @click="toggleHiddenColumn(header.value)"
+        :color="hiddenColumns.includes(header.value) ? 'gray' : 'primary'"
+      >
+        <v-icon class="mr-1">
+          {{ hiddenColumns.includes(header.value) ? "mdi-eye-off" : "mdi-eye" }}
+        </v-icon>
+        {{ header.value }}
+      </v-btn>
       <v-data-table
         :items="movies"
         :headers="movieHeaders"
@@ -29,7 +43,18 @@ export default {
   data() {
     return {
       state: store.state,
+      hiddenColumns: [],
     };
+  },
+  methods: {
+    toggleHiddenColumn(column) {
+      if (this.hiddenColumns.includes(column)) {
+        const index = this.hiddenColumns.indexOf(column);
+        this.hiddenColumns.splice(index, 1);
+      } else {
+        this.hiddenColumns.push(column);
+      }
+    },
   },
   computed: {
     loading() {
@@ -38,8 +63,13 @@ export default {
     movies() {
       return store.getMovies();
     },
-    movieHeaders() {
+    originalHeaders() {
       return store.getMovieHeaders();
+    },
+    movieHeaders() {
+      return this.originalHeaders.filter(
+        (h) => !this.hiddenColumns.includes(h.value)
+      );
     },
   },
 };

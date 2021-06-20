@@ -11,7 +11,9 @@
     </v-app-bar>
 
     <v-main>
-      <router-view />
+      <transition name="fade" mode="out-in">
+        <router-view />
+      </transition>
     </v-main>
   </v-app>
 </template>
@@ -19,15 +21,21 @@
 <script>
 export default {
   name: "App",
-
-  data: () => ({
-    //
-  }),
 };
 </script>
 
 <style lang="scss" scoped>
 v-icon {
   vertical-align: middle;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
