@@ -44,7 +44,7 @@ export default {
     return {
       state: store.state,
       hiddenColumns:
-        JSON.parse(localStorage.getItem("hiddenMovieColumns")) || [],
+        JSON.parse(localStorage.getItem("hiddenMovieColumns")) || []
     };
   },
   methods: {
