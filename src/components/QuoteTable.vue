@@ -49,7 +49,9 @@
           <v-dialog v-model="dialog" max-width="500px">
             <v-card>
               <v-card-title>
-                <span class="text-h5">EDIT QUOTE</span>
+                <span class="text-h5">
+                  {{ editMode ? "EDIT QUOTE" : "DUPLICATE (INSERT) QUOTE" }}
+                </span>
               </v-card-title>
 
               <v-card-text>
@@ -137,6 +139,7 @@ export default {
       this.$nextTick(() => {
         this.editedQuote = {};
       });
+      this.editMode = false;
     },
     saveQuote() {
       this.dialog = false;
@@ -160,6 +163,7 @@ export default {
       store.deleteQuote(quote._id);
     },
     duplicateQuote(quote) {
+      this.editMode = false;
       this.dialog = true;
       this.editedQuote = Object.assign({}, quote);
     },
